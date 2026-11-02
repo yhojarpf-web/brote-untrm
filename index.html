@@ -53,6 +53,8 @@ table.grid th,table.grid td{border-bottom:1px solid var(--line);padding:8px 4px;
 table.grid thead th{font-size:13px;color:var(--muted);font-weight:600}
 table.grid tbody th{text-align:left;font-weight:500;min-width:96px}
 table.grid input[type=radio]{width:20px;height:20px;accent-color:var(--brand)}
+table.grid input[type=time]{min-width:104px;padding:6px;font-size:14px}
+table.grid input[type=time]:disabled{opacity:.35}
 table.grid input[type=date]{min-width:128px;padding:6px;font-size:14px}
 table.grid input[type=date]:disabled{opacity:.35}
 fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 10px;padding:6px 12px}
@@ -105,7 +107,7 @@ button:disabled{opacity:.55;cursor:default}
     <p>Queremos conocer el motivo por el que no asistió al comedor esos días. Le pedimos responder con sinceridad; así podremos descartar exposición y seguir consultando el estado de salud de las personas expuestas.</p></div>
   <div class="card q" data-k="motivo" data-req>
     <p class="ql">No consumió, ¿por qué motivo? <span class="req">*</span></p>
-    <div class="opt" data-radio="motivo" data-opts="No asistió a la universidad|No le gustó o no quiso el menú|Llevó la comida pero no la consumió|Le dio su cupo a otro compañero|Otro"></div>
+    <div class="opt" data-radio="motivo" data-opts="No asistió a la universidad|No le gustó o no quiso el menú|Llevó la comida pero no la consumió|Llevó la comida y se la dio a otro compañero|Le dio su cupo a otro compañero|Otro"></div>
     <div class="q sub" data-k="motivo_otro" data-req data-if="eq:motivo:Otro">
       <input type="text" name="motivo_otro" placeholder="Especifique el motivo">
     </div>
@@ -114,10 +116,10 @@ button:disabled{opacity:.55;cursor:default}
 
 <!-- 3. CUPO -->
 <section data-step="cupo">
-  <div class="card shead"><h2>Información sobre la persona que usó su cupo</h2>
+  <div class="card shead"><h2>Información sobre la persona que usó su cupo o recogió sus alimentos</h2>
     <p>Necesitamos hacer seguimiento a las personas expuestas. Esta información es confidencial y será usada solo para la investigación epidemiológica.</p></div>
   <div class="card q" data-k="cupo_nombre" data-req>
-    <p class="ql">Nombres y apellidos de la persona que usó su cupo <span class="req">*</span></p>
+    <p class="ql">Nombres y apellidos de la persona que usó su cupo o recibió sus alimentos <span class="req">*</span></p>
     <input type="text" name="cupo_nombre">
   </div>
   <div class="card q" data-k="cupo_celular" data-pattern="^9\d{8}$" data-msg="Ingrese un celular de 9 dígitos que empiece con 9.">
@@ -130,7 +132,7 @@ button:disabled{opacity:.55;cursor:default}
     <input type="text" name="cupo_ref">
   </div>
   <div class="card q" data-k="cupo_dias" data-req>
-    <p class="ql">¿Qué días usó su cupo? <span class="req">*</span></p>
+    <p class="ql">¿Qué días usó su cupo o recibió alimentos? <span class="req">*</span></p>
     <div class="opt" data-check="cupo_dias" data-opts="Martes 27/10|Miércoles 28/10|Jueves 29/10|No sé"></div>
   </div>
 </section>
@@ -188,7 +190,7 @@ button:disabled{opacity:.55;cursor:default}
     <div class="row2">
       <div class="q" data-k="carrera" data-req><p class="ql">Escuela profesional <span class="req">*</span></p><input type="text" name="carrera"></div>
       <div class="q" data-k="ciclo" data-req><p class="ql">Ciclo de estudios <span class="req">*</span></p>
-        <select name="ciclo"><option value="">Seleccione…</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>VI</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option></select></div>
+        <select name="ciclo"><option value="">Seleccione…</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>VI</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option><option>XIII</option><option>XIV</option></select></div>
     </div>
   </div>
   <div class="card q" data-k="cargo" data-req data-if="ne:condicion:Estudiante">
@@ -214,11 +216,12 @@ button:disabled{opacity:.55;cursor:default}
     </div>
     <div class="card">
       <p class="ql">Signos y síntomas <span class="req">*</span></p>
-      <p class="hint">Marque una opción por fila. Si presentó el síntoma, indique la fecha en que empezó.</p>
-      <div class="tscroll"><table class="grid" id="tSint"><thead><tr><th>Signo / síntoma</th><th>Sí</th><th>No</th><th>Ignora</th><th>Fecha de inicio</th></tr></thead><tbody></tbody></table></div>
+      <p class="hint">Marque una opción por fila. Si presentó el síntoma, indique la fecha y hora en que empezó (deslice la tabla hacia la derecha si no ve todas las columnas).</p>
+      <div class="tscroll"><table class="grid" id="tSint"><thead><tr><th>Signo / síntoma</th><th>Sí</th><th>No</th><th>Ignora</th><th>Fecha de inicio</th><th>Hora de inicio</th></tr></thead><tbody></tbody></table></div>
       <div class="row2 sub">
         <div class="q" data-k="otro_sint"><p class="ql">Otro síntoma</p><input type="text" name="otro_sint" placeholder="Especifique (opcional)"></div>
-        <div class="q" data-k="otro_sint_fecha"><p class="ql">Fecha de inicio</p><input type="date" name="otro_sint_fecha" min="2026-10-27"></div>
+        <div class="row2"><div class="q" data-k="otro_sint_fecha"><p class="ql">Fecha de inicio</p><input type="date" name="otro_sint_fecha" min="2026-10-27"></div>
+        <div class="q" data-k="otro_sint_hora"><p class="ql">Hora de inicio</p><input type="time" name="otro_sint_hora"></div></div>
       </div>
     </div>
   </div>
@@ -299,21 +302,21 @@ button:disabled{opacity:.55;cursor:default}
 const SCRIPT_URL = "";
 /* ====================================== */
 
-const CUPO = "Le dio su cupo a otro compañero";
+const CUPO = ["Le dio su cupo a otro compañero","Llevó la comida y se la dio a otro compañero"];
 const SINTOMAS = ["Náuseas","Vómitos","Diarrea","Dolor abdominal","Fiebre","Cefalea (dolor de cabeza)"];
 const MENU = [
   {id:"mar27", corto:"27/10", label:"Martes 27 de octubre", comidas:[
-    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", items:["Jugo de piña","Sancochado de carne con yuca","Choclo","Cereal de soya","Pan"]},
-    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", items:["Sopa de verduras","Zarza de cebolla","Pescado frito","Lenteja y arroz blanco","Fruta de estación","Refresco de agua de piña"]},
-    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", items:["Guiso de vainita con pollo","Arroz blanco","Compota de maracuyá","Infusión de té"]}]},
+    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", rangos:["6:45 – 7:00 a. m.","7:00 – 7:30 a. m.","7:30 – 8:00 a. m.","8:00 – 8:30 a. m.","8:30 – 9:00 a. m.","9:00 – 9:30 a. m."], items:["Jugo de piña","Sancochado de carne con yuca","Choclo","Cereal de soya","Pan"]},
+    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", rangos:["12:00 – 12:30 p. m.","12:30 – 1:00 p. m.","1:00 – 1:30 p. m.","1:30 – 2:00 p. m.","2:00 – 2:30 p. m.","2:30 – 2:45 p. m."], items:["Sopa de verduras","Zarza de cebolla","Pescado frito","Lenteja y arroz blanco","Fruta de estación","Refresco de agua de piña"]},
+    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", rangos:["5:00 – 5:30 p. m.","5:30 – 6:00 p. m.","6:00 – 6:30 p. m.","6:30 – 7:00 p. m.","7:00 – 7:30 p. m."], items:["Guiso de vainita con pollo","Arroz blanco","Compota de maracuyá","Infusión de té"]}]},
   {id:"mie28", corto:"28/10", label:"Miércoles 28 de octubre", comidas:[
-    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", items:["Jugo de yogurt","Arroz a la jardinera con pollo","Cereal de maca","Pan","Almendras"]},
-    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", items:["Sopa de trigo con papa amarilla","Ensalada de lechuga, rabanito y pepinillo","Adobo de cerdo","Yuca y arroz blanco","Manzana","Refresco de cebada"]},
-    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", items:["Tallarín verde","2 huevos sancochados","Arroz con leche","Infusión de manzanilla"]}]},
+    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", rangos:["6:45 – 7:00 a. m.","7:00 – 7:30 a. m.","7:30 – 8:00 a. m.","8:00 – 8:30 a. m.","8:30 – 9:00 a. m.","9:00 – 9:30 a. m."], items:["Jugo de yogurt","Arroz a la jardinera con pollo","Cereal de maca","Pan","Almendras"]},
+    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", rangos:["12:00 – 12:30 p. m.","12:30 – 1:00 p. m.","1:00 – 1:30 p. m.","1:30 – 2:00 p. m.","2:00 – 2:30 p. m.","2:30 – 2:45 p. m."], items:["Sopa de trigo con papa amarilla","Ensalada de lechuga, rabanito y pepinillo","Adobo de cerdo","Yuca y arroz blanco","Manzana","Refresco de cebada"]},
+    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", rangos:["5:00 – 5:30 p. m.","5:30 – 6:00 p. m.","6:00 – 6:30 p. m.","6:30 – 7:00 p. m.","7:00 – 7:30 p. m."], items:["Tallarín verde","2 huevos sancochados","Arroz con leche","Infusión de manzanilla"]}]},
   {id:"jue29", corto:"29/10", label:"Jueves 29 de octubre", comidas:[
-    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", items:["Jugo surtido (betarraga, zanahoria y papaya)","Pollo al pimiento","Papa","Sémola con leche","Pan","Pecanas"]},
-    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", items:["Cazuela de res","Ensalada de lechuga, zanahoria y tomate","Parrilla de res","Arroz y papa","Plátano","Refresco de carambola"]},
-    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", items:["Ají de pollo con lechuga, huevo y aceituna","Papa y arroz","Compota de papaya","Infusión de membrillo"]}]}
+    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", rangos:["6:45 – 7:00 a. m.","7:00 – 7:30 a. m.","7:30 – 8:00 a. m.","8:00 – 8:30 a. m.","8:30 – 9:00 a. m.","9:00 – 9:30 a. m."], items:["Jugo surtido (betarraga, zanahoria y papaya)","Pollo al pimiento","Papa","Sémola con leche","Pan","Pecanas"]},
+    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", rangos:["12:00 – 12:30 p. m.","12:30 – 1:00 p. m.","1:00 – 1:30 p. m.","1:30 – 2:00 p. m.","2:00 – 2:30 p. m.","2:30 – 2:45 p. m."], items:["Cazuela de res","Ensalada de lechuga, zanahoria y tomate","Parrilla de res","Arroz y papa","Plátano","Refresco de carambola"]},
+    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", rangos:["5:00 – 5:30 p. m.","5:30 – 6:00 p. m.","6:00 – 6:30 p. m.","6:30 – 7:00 p. m.","7:00 – 7:30 p. m."], items:["Ají de pollo con lechuga, huevo y aceituna","Papa y arroz","Compota de papaya","Infusión de membrillo"]}]}
 ];
 
 const form = document.getElementById("f");
@@ -329,7 +332,7 @@ const si = () => state.consumio === "Sí";
 const STEPS = [
   {id:"inicio"},
   {id:"noConsumo", if:() => state.consumio === "No"},
-  {id:"cupo",      if:() => state.consumio === "No" && state.motivo === CUPO},
+  {id:"cupo",      if:() => state.consumio === "No" && CUPO.includes(state.motivo)},
   {id:"rol",       if:si},
   {id:"datos",     if:si},
   {id:"clinico",   if:si},
@@ -353,6 +356,7 @@ document.querySelector("#tSint tbody").innerHTML = SINTOMAS.map((s,i) => `
     <th>${esc(s)}</th>
     ${["Sí","No","Ignora"].map(v => `<td><input type="radio" name="s${i}" value="${v}" aria-label="${esc(s)}: ${v}"></td>`).join("")}
     <td><input type="date" name="sf${i}" min="2026-10-27" data-en="eq:s${i}:Sí" aria-label="Fecha de inicio de ${esc(s)}"></td>
+    <td><input type="time" name="sh${i}" data-en="eq:s${i}:Sí" aria-label="Hora de inicio de ${esc(s)}"></td>
   </tr>`).join("");
 
 MENU.forEach((d, di) => {
@@ -368,9 +372,9 @@ MENU.forEach((d, di) => {
         <div class="opt">${opts("radio", mk, ["Sí","No","No recuerda"])}</div>
       </div>
       <div data-if="eq:${mk}:Sí">
-        <div class="q sub" data-k="${mk}_hora" style="max-width:220px">
-          <p class="ql" style="font-weight:500">Hora aproximada en que comió <span class="hint">(opcional)</span></p>
-          <input type="time" name="${mk}_hora">
+        <div class="q sub" data-k="${mk}_hora" data-req style="max-width:280px">
+          <p class="ql" style="font-weight:500">Hora aproximada en que comió <span class="req">*</span></p>
+          <select name="${mk}_hora"><option value="">Seleccione…</option>${[...c.rangos, "No recuerda"].map(r => `<option>${esc(r)}</option>`).join("")}</select>
         </div>
         <div class="tscroll sub"><table class="grid"><thead><tr><th>Alimento</th><th>Sí comió</th><th>No comió</th><th>No recuerda</th></tr></thead><tbody>
         ${c.items.map((it, ii) => `<tr class="q" data-k="${mk}_${ii}" data-req><th>${esc(it)}</th>
@@ -419,7 +423,7 @@ function read(el){
   else state[k] = el.value.trim();
 }
 function onChange(e){
-  read(e.target); refresh(); clearErr(e.target); saveDraft();
+  read(e.target); refresh(); clearErr(e.target); updateNav(); saveDraft();
 }
 form.addEventListener("change", onChange);
 form.addEventListener("input", e => { if (!["radio","checkbox"].includes(e.target.type)) onChange(e); });
@@ -497,15 +501,16 @@ function validate(stepId){
 }
 
 /* ---------- navegación ---------- */
+function updateNav(){
+  const p = path(), i = p.indexOf(current);
+  document.getElementById("back").style.visibility = hist.length ? "visible" : "hidden";
+  document.getElementById("next").textContent = i === p.length - 1 ? "Enviar" : "Siguiente";
+  document.getElementById("bar").style.width = (current === "fin" ? 100 : Math.round(i / p.length * 100)) + "%";
+}
 function show(id){
   current = id;
   form.querySelectorAll("section[data-step]").forEach(s => s.classList.toggle("on", s.dataset.step === id));
-  const p = path(), i = p.indexOf(id);
-  const last = i === p.length - 1;
-  document.getElementById("back").style.visibility = hist.length ? "visible" : "hidden";
-  const nx = document.getElementById("next");
-  nx.textContent = last ? "Enviar" : "Siguiente";
-  document.getElementById("bar").style.width = (id === "fin" ? 100 : Math.round(i / p.length * 100)) + "%";
+  updateNav();
   window.scrollTo({top:0});
   saveDraft();
 }
@@ -541,10 +546,10 @@ function columns(){
   add("Consumió en comedor 27-29/10", g("consumio"));
   add("No consumo - Motivo", g("motivo"));
   add("No consumo - Otro motivo", g("motivo_otro"));
-  add("Cupo - Nombre de quien lo usó", g("cupo_nombre"));
+  add("Cupo/alimentos - Nombre del expuesto", g("cupo_nombre"));
   add("Cupo - Celular", g("cupo_celular"));
   add("Cupo - Carrera/ciclo/referencia", g("cupo_ref"));
-  add("Cupo - Días que lo usó", g("cupo_dias"));
+  add("Cupo/alimentos - Días", g("cupo_dias"));
   add("Relación con los alimentos", g("relacion"));
   add("Relación - Otro", g("relacion_otro"));
   add("Condición", g("condicion"));
@@ -562,9 +567,10 @@ function columns(){
   add("Presentó síntomas", g("sintomas"));
   add("Fecha inicio síntomas", g("fecha_inicio"));
   add("Hora inicio síntomas", g("hora_inicio"));
-  SINTOMAS.forEach((s, i) => { add(`Síntoma - ${s}`, g("s"+i)); add(`Síntoma - ${s} - Fecha inicio`, g("sf"+i)); });
+  SINTOMAS.forEach((s, i) => { add(`Síntoma - ${s}`, g("s"+i)); add(`Síntoma - ${s} - Fecha inicio`, g("sf"+i)); add(`Síntoma - ${s} - Hora inicio`, g("sh"+i)); });
   add("Otro síntoma", g("otro_sint"));
   add("Otro síntoma - Fecha inicio", g("otro_sint_fecha"));
+  add("Otro síntoma - Hora inicio", g("otro_sint_hora"));
   add("Atención de salud", g("atencion"));
   add("Lugar de atención", g("lugar"));
   add("Lugar de atención - Otro", g("lugar_otro"));
