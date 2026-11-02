@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cuestionario Brote ETA – UNTRM</title>
+<style>
+:root{
+  --bg:#f3f5f8; --card:#ffffff; --ink:#1c2430; --muted:#5b6675; --line:#dfe4ea;
+  --brand:#0d5c63; --brand-ink:#ffffff; --brand-soft:#e3f1f2; --err:#b42318; --err-soft:#fdecea;
+  --warn-soft:#fff6e0; --radius:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#11161c; --card:#1a2129; --ink:#e7ecf1; --muted:#9aa6b4; --line:#2c3642;
+    --brand:#3fb0b8; --brand-ink:#0b1a1c; --brand-soft:#16343a; --err:#ff8a7a; --err-soft:#3a1d1a;
+    --warn-soft:#3a3218;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+.top{background:var(--brand);color:var(--brand-ink);padding:22px 0 18px}
+.top .eyebrow{margin:0;font-size:13px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.top h1{margin:4px 0 0;font-size:22px;line-height:1.25}
+.progress{height:6px;background:var(--line);border-radius:99px;margin:16px 0;overflow:hidden}
+#bar{height:100%;width:0;background:var(--brand);transition:width .25s}
+.banner{border-radius:var(--radius);padding:12px 14px;margin-top:16px;background:var(--warn-soft);font-size:14px}
+.banner button{margin-left:6px}
+section[data-step]{display:none}
+section[data-step].on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.shead{border-top:6px solid var(--brand)}
+.shead h2{margin:0 0 6px;font-size:19px}
+.shead p{margin:0;color:var(--muted);font-size:15px}
+.ql{margin:0 0 10px;font-weight:600}
+.hint{margin:-6px 0 10px;color:var(--muted);font-size:14px}
+.req{color:var(--err)}
+.opt label{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer}
+.opt input{width:20px;height:20px;margin:2px 0 0;flex:none;accent-color:var(--brand)}
+input[type=text],input[type=tel],input[type=number],input[type=date],input[type=time],select,textarea{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
+textarea{min-height:80px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
+.sub{margin-top:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.q.err{border-color:var(--err);background:var(--err-soft)}
+tr.q.err th{color:var(--err)}
+.emsg{color:var(--err);font-size:14px;margin:8px 0 0}
+.tscroll{overflow-x:auto;margin:0 -4px}
+table.grid{width:100%;border-collapse:collapse;font-size:15px}
+table.grid th,table.grid td{border-bottom:1px solid var(--line);padding:8px 4px;text-align:center;vertical-align:middle}
+table.grid thead th{font-size:13px;color:var(--muted);font-weight:600}
+table.grid tbody th{text-align:left;font-weight:500;min-width:96px}
+table.grid input[type=radio]{width:20px;height:20px;accent-color:var(--brand)}
+table.grid input[type=date]{min-width:128px;padding:6px;font-size:14px}
+table.grid input[type=date]:disabled{opacity:.35}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 10px;padding:6px 12px}
+legend{font-weight:600;font-size:14px;padding:0 4px;color:var(--brand)}
+.nav{display:flex;justify-content:space-between;gap:12px;margin:18px 0 40px}
+button{font:inherit;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:11px 18px;cursor:pointer}
+button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
+button:disabled{opacity:.55;cursor:default}
+.intro p{margin:0 0 10px}
+.intro p:last-child{margin:0}
+.done{text-align:center;padding:36px 18px}
+.done h2{margin:0 0 8px}
+.status{color:var(--muted);font-size:14px;text-align:right;margin-top:-28px;margin-bottom:28px}
+.preview{font-size:13px;text-align:left;max-height:340px;overflow:auto}
+.preview td{border-bottom:1px solid var(--line);padding:4px 6px;vertical-align:top}
+@media (max-width:480px){.row2{grid-template-columns:1fr}.top h1{font-size:19px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <p class="eyebrow">Investigación epidemiológica</p>
+  <h1>Cuestionario de información – Brote ETA, UNTRM</h1>
+</div></header>
+
+<div class="wrap">
+<div id="demo" class="banner" hidden><b>Modo de prueba:</b> aún no se configuró el enlace de Google (SCRIPT_URL). Las respuestas no se guardarán; al final verá la fila que se enviaría.</div>
+<div id="draftNote" class="banner" hidden>Se recuperó el avance que dejó sin enviar. <button type="button" id="restart">Empezar de nuevo</button></div>
+<div class="progress"><div id="bar"></div></div>
+
+<form id="f" novalidate autocomplete="off">
+
+<!-- 1. INICIO -->
+<section data-step="inicio">
+  <div class="card shead intro">
+    <p>Estimado participante: ante la información de que usted es beneficiario directo o indirecto del comedor universitario, le invitamos a llenar el siguiente formulario con el fin de recolectar información detallada sobre el brote de ETA sucedido en la UNTRM.</p>
+    <p>Su colaboración servirá para registrar todos los casos o descartar si estuvieron expuestos al evento sucedido entre el 27 y el 29/10/26. La información es <b>confidencial</b>: solo se usará con fines de investigación epidemiológica, no para investigaciones de otra índole ni para amonestaciones.</p>
+    <p>Ante cualquier duda, comuníquese al celular <a href="tel:941991234">941 991 234</a> o al <a href="tel:995238623">995 238 623</a>.</p>
+    <p class="hint" style="margin-top:10px">Al enviar este formulario, usted acepta participar voluntariamente en la investigación.</p>
+  </div>
+  <div class="card q" data-k="consumio" data-req>
+    <p class="ql">¿Consumió alimentos en el comedor universitario de la UNTRM entre el 27, 28 y 29 de octubre? <span class="req">*</span></p>
+    <p class="hint">Cualquiera de los días mencionados.</p>
+    <div class="opt" data-radio="consumio" data-opts="Sí|No"></div>
+  </div>
+</section>
+
+<!-- 2. NO CONSUMO -->
+<section data-step="noConsumo">
+  <div class="card shead"><h2>Motivo de no consumo</h2>
+    <p>Queremos conocer el motivo por el que no asistió al comedor esos días. Le pedimos responder con sinceridad; así podremos descartar exposición y seguir consultando el estado de salud de las personas expuestas.</p></div>
+  <div class="card q" data-k="motivo" data-req>
+    <p class="ql">No consumió, ¿por qué motivo? <span class="req">*</span></p>
+    <div class="opt" data-radio="motivo" data-opts="No asistió a la universidad|No le gustó o no quiso el menú|Llevó la comida pero no la consumió|Le dio su cupo a otro compañero|Otro"></div>
+    <div class="q sub" data-k="motivo_otro" data-req data-if="eq:motivo:Otro">
+      <input type="text" name="motivo_otro" placeholder="Especifique el motivo">
+    </div>
+  </div>
+</section>
+
+<!-- 3. CUPO -->
+<section data-step="cupo">
+  <div class="card shead"><h2>Información sobre la persona que usó su cupo</h2>
+    <p>Necesitamos hacer seguimiento a las personas expuestas. Esta información es confidencial y será usada solo para la investigación epidemiológica.</p></div>
+  <div class="card q" data-k="cupo_nombre" data-req>
+    <p class="ql">Nombres y apellidos de la persona que usó su cupo <span class="req">*</span></p>
+    <input type="text" name="cupo_nombre">
+  </div>
+  <div class="card q" data-k="cupo_celular" data-pattern="^9\d{8}$" data-msg="Ingrese un celular de 9 dígitos que empiece con 9.">
+    <p class="ql">Número de celular</p>
+    <p class="hint">Si no lo sabe, déjelo en blanco.</p>
+    <input type="tel" name="cupo_celular" inputmode="numeric" maxlength="9">
+  </div>
+  <div class="card q" data-k="cupo_ref">
+    <p class="ql">Carrera que estudia, ciclo o alguna referencia</p>
+    <input type="text" name="cupo_ref">
+  </div>
+  <div class="card q" data-k="cupo_dias" data-req>
+    <p class="ql">¿Qué días usó su cupo? <span class="req">*</span></p>
+    <div class="opt" data-check="cupo_dias" data-opts="Martes 27/10|Miércoles 28/10|Jueves 29/10|No sé"></div>
+  </div>
+</section>
+
+<!-- 4. ROL -->
+<section data-step="rol">
+  <div class="card shead"><h2>Su relación con los alimentos</h2>
+    <p>Puede marcar más de una opción.</p></div>
+  <div class="card q" data-k="relacion" data-req>
+    <p class="ql">Respecto a los alimentos de los días 27, 28 y 29 de octubre, usted: <span class="req">*</span></p>
+    <div class="opt" data-check="relacion" data-opts="Consumió alimentos del comedor|Preparó o ayudó en la preparación (manipulador)|Otro"></div>
+    <div class="q sub" data-k="relacion_otro" data-req data-if="has:relacion:Otro">
+      <input type="text" name="relacion_otro" placeholder="Especifique">
+    </div>
+  </div>
+  <div class="card q" data-k="condicion" data-req>
+    <p class="ql">Usted es: <span class="req">*</span></p>
+    <div class="opt" data-radio="condicion" data-opts="Estudiante|Trabajador(a) del comedor|Docente|Personal administrativo|Otro"></div>
+    <div class="q sub" data-k="condicion_otro" data-req data-if="eq:condicion:Otro">
+      <input type="text" name="condicion_otro" placeholder="Especifique">
+    </div>
+  </div>
+</section>
+
+<!-- 5. DATOS -->
+<section data-step="datos">
+  <div class="card shead"><h2>Ficha clínico-epidemiológica · Parte I</h2>
+    <p>Datos personales.</p></div>
+  <div class="card">
+    <div class="row2">
+      <div class="q" data-k="apellidos" data-req><p class="ql">Apellidos <span class="req">*</span></p><input type="text" name="apellidos"></div>
+      <div class="q" data-k="nombres" data-req><p class="ql">Nombres <span class="req">*</span></p><input type="text" name="nombres"></div>
+    </div>
+  </div>
+  <div class="card q" data-k="dni" data-req data-pattern="^[0-9A-Za-z-]{6,15}$" data-msg="Ingrese un DNI o código válido (solo números y letras).">
+    <p class="ql">DNI o código de estudiante <span class="req">*</span></p>
+    <p class="hint">Sirve para evitar registros duplicados.</p>
+    <input type="text" name="dni" inputmode="numeric" maxlength="15">
+  </div>
+  <div class="card">
+    <div class="row2">
+      <div class="q" data-k="sexo" data-req><p class="ql">Sexo <span class="req">*</span></p><div class="opt" data-radio="sexo" data-opts="Masculino|Femenino"></div></div>
+      <div class="q" data-k="edad" data-req data-min="14" data-max="90" data-msg="Ingrese una edad entre 14 y 90 años."><p class="ql">Edad (años) <span class="req">*</span></p><input type="number" name="edad" inputmode="numeric" min="14" max="90"></div>
+    </div>
+  </div>
+  <div class="card q" data-k="domicilio" data-req>
+    <p class="ql">Domicilio en Chachapoyas (agregue referencias) <span class="req">*</span></p>
+    <textarea name="domicilio"></textarea>
+  </div>
+  <div class="card q" data-k="celular" data-req data-pattern="^9\d{8}$" data-msg="Ingrese un celular de 9 dígitos que empiece con 9.">
+    <p class="ql">Número de celular <span class="req">*</span></p>
+    <input type="tel" name="celular" inputmode="numeric" maxlength="9">
+  </div>
+  <div class="card" data-if="eq:condicion:Estudiante">
+    <div class="row2">
+      <div class="q" data-k="carrera" data-req><p class="ql">Escuela profesional <span class="req">*</span></p><input type="text" name="carrera"></div>
+      <div class="q" data-k="ciclo" data-req><p class="ql">Ciclo de estudios <span class="req">*</span></p>
+        <select name="ciclo"><option value="">Seleccione…</option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>VI</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option></select></div>
+    </div>
+  </div>
+  <div class="card q" data-k="cargo" data-req data-if="ne:condicion:Estudiante">
+    <p class="ql">Cargo u ocupación <span class="req">*</span></p>
+    <input type="text" name="cargo">
+  </div>
+</section>
+
+<!-- 6. CLÍNICO -->
+<section data-step="clinico">
+  <div class="card shead"><h2>Ficha clínico-epidemiológica · Parte II</h2>
+    <p>Cuadro clínico.</p></div>
+  <div class="card q" data-k="sintomas" data-req>
+    <p class="ql">¿Presentó algún síntoma o malestar después de consumir alimentos del comedor esos días? <span class="req">*</span></p>
+    <div class="opt" data-radio="sintomas" data-opts="Sí|No"></div>
+  </div>
+  <div data-if="eq:sintomas:Sí">
+    <div class="card">
+      <div class="row2">
+        <div class="q" data-k="fecha_inicio" data-req><p class="ql">Fecha de inicio de síntomas <span class="req">*</span></p><input type="date" name="fecha_inicio" min="2026-10-27"></div>
+        <div class="q" data-k="hora_inicio" data-req><p class="ql">Hora de inicio (aprox.) <span class="req">*</span></p><input type="time" name="hora_inicio"></div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="ql">Signos y síntomas <span class="req">*</span></p>
+      <p class="hint">Marque una opción por fila. Si presentó el síntoma, indique la fecha en que empezó.</p>
+      <div class="tscroll"><table class="grid" id="tSint"><thead><tr><th>Signo / síntoma</th><th>Sí</th><th>No</th><th>Ignora</th><th>Fecha de inicio</th></tr></thead><tbody></tbody></table></div>
+      <div class="row2 sub">
+        <div class="q" data-k="otro_sint"><p class="ql">Otro síntoma</p><input type="text" name="otro_sint" placeholder="Especifique (opcional)"></div>
+        <div class="q" data-k="otro_sint_fecha"><p class="ql">Fecha de inicio</p><input type="date" name="otro_sint_fecha" min="2026-10-27"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. ATENCIÓN -->
+<section data-step="atencion">
+  <div class="card shead"><h2>Atención de salud</h2></div>
+  <div class="card q" data-k="atencion" data-req>
+    <p class="ql">¿Recibió atención de salud por este cuadro? <span class="req">*</span></p>
+    <div class="opt" data-radio="atencion" data-opts="Sí|No"></div>
+  </div>
+  <div data-if="eq:atencion:Sí">
+    <div class="card q" data-k="lugar" data-req>
+      <p class="ql">¿Dónde? <span class="req">*</span></p>
+      <p class="hint">Puede marcar más de una opción.</p>
+      <div class="opt" data-check="lugar" data-opts="P.S. Higos Urco|Hospital Virgen de Fátima|Tópico de la universidad|Otro"></div>
+      <div class="q sub" data-k="lugar_otro" data-req data-if="has:lugar:Otro"><input type="text" name="lugar_otro" placeholder="Especifique el lugar"></div>
+    </div>
+    <div class="card q" data-k="hospitalizado" data-req>
+      <p class="ql">¿Fue hospitalizado? <span class="req">*</span></p>
+      <div class="opt" data-radio="hospitalizado" data-opts="Sí|No"></div>
+    </div>
+    <div class="card q" data-k="medicamentos">
+      <p class="ql">¿Recibió medicamentos?</p>
+      <p class="hint">Escriba los que recuerde. Si no recibió, déjelo en blanco.</p>
+      <textarea name="medicamentos"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- 8-10. CONSUMO POR DÍA (se genera con el menú) -->
+<section data-step="dia0"></section>
+<section data-step="dia1"></section>
+<section data-step="dia2"></section>
+
+<!-- 11. SABOR -->
+<section data-step="sabor">
+  <div class="card shead"><h2>Percepción del sabor de los alimentos</h2></div>
+  <div class="card q" data-k="sabor" data-req>
+    <p class="ql">¿Identificó algún sabor u olor extraño en alguna comida o bebida servida en el comedor durante los días 27, 28 y 29 de octubre? <span class="req">*</span></p>
+    <div class="opt" data-radio="sabor" data-opts="Sí|No|No recuerda"></div>
+  </div>
+  <div data-if="eq:sabor:Sí">
+    <div class="card q" data-k="sabor_alim" data-req>
+      <p class="ql">¿En qué alimentos o bebidas? <span class="req">*</span></p>
+      <p class="hint">Marque todos los que correspondan.</p>
+      <div id="saborList"></div>
+    </div>
+    <div class="card q" data-k="sabor_desc" data-req>
+      <p class="ql">Describa el sabor u olor que notó <span class="req">*</span></p>
+      <textarea name="sabor_desc" placeholder="Por ejemplo: agrio, rancio, olor a guardado…"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- FIN -->
+<section data-step="fin">
+  <div class="card done">
+    <h2>¡Gracias por su colaboración!</h2>
+    <p id="finMsg">Su respuesta fue registrada correctamente.</p>
+    <div id="finPreview"></div>
+  </div>
+</section>
+
+<div class="nav" id="nav">
+  <button type="button" id="back">Atrás</button>
+  <button type="button" id="next" class="primary">Siguiente</button>
+</div>
+<p class="status" id="status" aria-live="polite"></p>
+</form>
+</div>
+
+<script>
+/* ============ CONFIGURACIÓN ============
+   Pegue aquí la URL de su aplicación web de Google Apps Script
+   (termina en /exec). Vea la guía GUIA.md. */
+const SCRIPT_URL = "";
+/* ====================================== */
+
+const CUPO = "Le dio su cupo a otro compañero";
+const SINTOMAS = ["Náuseas","Vómitos","Diarrea","Dolor abdominal","Fiebre","Cefalea (dolor de cabeza)"];
+const MENU = [
+  {id:"mar27", corto:"27/10", label:"Martes 27 de octubre", comidas:[
+    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", items:["Jugo de piña","Sancochado de carne con yuca","Choclo","Cereal de soya","Pan"]},
+    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", items:["Sopa de verduras","Zarza de cebolla","Pescado frito","Lenteja y arroz blanco","Fruta de estación","Refresco de agua de piña"]},
+    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", items:["Guiso de vainita con pollo","Arroz blanco","Compota de maracuyá","Infusión de té"]}]},
+  {id:"mie28", corto:"28/10", label:"Miércoles 28 de octubre", comidas:[
+    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", items:["Jugo de yogurt","Arroz a la jardinera con pollo","Cereal de maca","Pan","Almendras"]},
+    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", items:["Sopa de trigo con papa amarilla","Ensalada de lechuga, rabanito y pepinillo","Adobo de cerdo","Yuca y arroz blanco","Manzana","Refresco de cebada"]},
+    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", items:["Tallarín verde","2 huevos sancochados","Arroz con leche","Infusión de manzanilla"]}]},
+  {id:"jue29", corto:"29/10", label:"Jueves 29 de octubre", comidas:[
+    {id:"des", label:"Desayuno", horario:"6:45 a 9:30 a. m.", items:["Jugo surtido (betarraga, zanahoria y papaya)","Pollo al pimiento","Papa","Sémola con leche","Pan","Pecanas"]},
+    {id:"alm", label:"Almuerzo", horario:"12:00 m. a 2:45 p. m.", items:["Cazuela de res","Ensalada de lechuga, zanahoria y tomate","Parrilla de res","Arroz y papa","Plátano","Refresco de carambola"]},
+    {id:"cen", label:"Cena", horario:"5:00 a 7:30 p. m.", items:["Ají de pollo con lechuga, huevo y aceituna","Papa y arroz","Compota de papaya","Infusión de membrillo"]}]}
+];
+
+const form = document.getElementById("f");
+let state = {};
+let hist = [];
+let current = "inicio";
+let RID = (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2));
+const DRAFT = "eta-untrm-borrador-v1";
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const si = () => state.consumio === "Sí";
+
+const STEPS = [
+  {id:"inicio"},
+  {id:"noConsumo", if:() => state.consumio === "No"},
+  {id:"cupo",      if:() => state.consumio === "No" && state.motivo === CUPO},
+  {id:"rol",       if:si},
+  {id:"datos",     if:si},
+  {id:"clinico",   if:si},
+  {id:"atencion",  if:() => si() && state.sintomas === "Sí"},
+  {id:"dia0",      if:si},
+  {id:"dia1",      if:si},
+  {id:"dia2",      if:si},
+  {id:"sabor",     if:si}
+];
+const path = () => STEPS.filter(s => !s.if || s.if()).map(s => s.id);
+
+/* ---------- construir controles ---------- */
+function opts(kind, name, list){
+  return list.map(v => `<label><input type="${kind}" name="${esc(name)}" value="${esc(v)}"><span>${esc(v)}</span></label>`).join("");
+}
+document.querySelectorAll("[data-radio]").forEach(el => el.innerHTML = opts("radio", el.dataset.radio, el.dataset.opts.split("|")));
+document.querySelectorAll("[data-check]").forEach(el => el.innerHTML = opts("checkbox", el.dataset.check, el.dataset.opts.split("|")));
+
+document.querySelector("#tSint tbody").innerHTML = SINTOMAS.map((s,i) => `
+  <tr class="q" data-k="s${i}" data-req>
+    <th>${esc(s)}</th>
+    ${["Sí","No","Ignora"].map(v => `<td><input type="radio" name="s${i}" value="${v}" aria-label="${esc(s)}: ${v}"></td>`).join("")}
+    <td><input type="date" name="sf${i}" min="2026-10-27" data-en="eq:s${i}:Sí" aria-label="Fecha de inicio de ${esc(s)}"></td>
+  </tr>`).join("");
+
+MENU.forEach((d, di) => {
+  const sec = document.querySelector(`section[data-step="dia${di}"]`);
+  let h = `<div class="card shead"><h2>Consumo de alimentos · ${esc(d.label)}</h2>
+    <p>Indique qué consumió del comedor universitario ese día.</p></div>`;
+  d.comidas.forEach(c => {
+    const mk = `m_${d.id}_${c.id}`;
+    h += `<div class="card">
+      <div class="q" data-k="${mk}" data-req>
+        <p class="ql">${esc(c.label)} <span class="req">*</span></p>
+        <p class="hint">¿Consumió el ${esc(c.label.toLowerCase())} del comedor este día? (servido de ${esc(c.horario)})</p>
+        <div class="opt">${opts("radio", mk, ["Sí","No","No recuerda"])}</div>
+      </div>
+      <div data-if="eq:${mk}:Sí">
+        <div class="q sub" data-k="${mk}_hora" style="max-width:220px">
+          <p class="ql" style="font-weight:500">Hora aproximada en que comió <span class="hint">(opcional)</span></p>
+          <input type="time" name="${mk}_hora">
+        </div>
+        <div class="tscroll sub"><table class="grid"><thead><tr><th>Alimento</th><th>Sí comió</th><th>No comió</th><th>No recuerda</th></tr></thead><tbody>
+        ${c.items.map((it, ii) => `<tr class="q" data-k="${mk}_${ii}" data-req><th>${esc(it)}</th>
+          ${["Sí","No","No recuerda"].map(v => `<td><input type="radio" name="${mk}_${ii}" value="${v}" aria-label="${esc(it)}: ${v}"></td>`).join("")}</tr>`).join("")}
+        </tbody></table></div>
+      </div>
+    </div>`;
+  });
+  sec.innerHTML = h;
+});
+
+document.getElementById("saborList").innerHTML = MENU.map(d => d.comidas.map(c =>
+  `<fieldset><legend>${esc(d.corto)} · ${esc(c.label)}</legend><div class="opt">${
+    opts("checkbox", "sabor_alim", c.items.map(it => `${d.corto} ${c.label}: ${it}`))
+      .replace(/<span>[^:<]*: /g, "<span>")}</div></fieldset>`).join("")).join("");
+
+/* fecha máxima = hoy */
+const hoy = new Date(); const iso = new Date(hoy.getTime() - hoy.getTimezoneOffset()*60000).toISOString().slice(0,10);
+form.querySelectorAll('input[type=date]').forEach(i => i.max = iso);
+
+/* ---------- condiciones ---------- */
+function cond(expr){
+  const [op, k, v] = expr.split(":");
+  const val = state[k];
+  if (op === "eq")  return val === v;
+  if (op === "ne")  return !!val && val !== v;
+  if (op === "has") return Array.isArray(val) && val.includes(v);
+  return true;
+}
+function visible(el){
+  for (let n = el; n && n !== form; n = n.parentElement){
+    if (n.dataset && n.dataset.if && !cond(n.dataset.if)) return false;
+  }
+  return true;
+}
+function refresh(){
+  form.querySelectorAll("[data-if]").forEach(el => el.hidden = !cond(el.dataset.if));
+  form.querySelectorAll("[data-en]").forEach(el => el.disabled = !cond(el.dataset.en));
+}
+
+/* ---------- estado ---------- */
+function read(el){
+  const k = el.name; if (!k) return;
+  if (el.type === "checkbox") state[k] = [...form.querySelectorAll(`input[name="${CSS.escape(k)}"]:checked`)].map(i => i.value);
+  else if (el.type === "radio") { if (el.checked) state[k] = el.value; }
+  else state[k] = el.value.trim();
+}
+function onChange(e){
+  read(e.target); refresh(); clearErr(e.target); saveDraft();
+}
+form.addEventListener("change", onChange);
+form.addEventListener("input", e => { if (!["radio","checkbox"].includes(e.target.type)) onChange(e); });
+
+function fill(){
+  form.querySelectorAll("input,select,textarea").forEach(el => {
+    const v = state[el.name]; if (v === undefined) return;
+    if (el.type === "checkbox") el.checked = Array.isArray(v) && v.includes(el.value);
+    else if (el.type === "radio") el.checked = el.value === v;
+    else el.value = v;
+  });
+}
+function saveDraft(){
+  try { localStorage.setItem(DRAFT, JSON.stringify({state, hist, current, RID})); } catch(e){}
+}
+function loadDraft(){
+  try {
+    const d = JSON.parse(localStorage.getItem(DRAFT) || "null");
+    if (d && d.state && Object.keys(d.state).length){
+      state = d.state; hist = d.hist || []; current = d.current || "inicio"; RID = d.RID || RID;
+      if (!path().includes(current)) { current = "inicio"; hist = []; }
+      document.getElementById("draftNote").hidden = false;
+    }
+  } catch(e){}
+}
+document.getElementById("restart").onclick = () => {
+  try { localStorage.removeItem(DRAFT); } catch(e){}
+  location.reload();
+};
+
+/* ---------- validación ---------- */
+function isEmpty(v){ return v === undefined || v === "" || (Array.isArray(v) && !v.length); }
+function clearErr(el){
+  const q = el.closest(".q"); if (!q) return;
+  q.classList.remove("err"); const m = q.querySelector(":scope > .emsg, :scope > td > .emsg"); if (m) m.remove();
+}
+function setErr(q, msg){
+  q.classList.add("err");
+  if (q.tagName === "TR") return;
+  if (!q.querySelector(":scope > .emsg")){
+    const p = document.createElement("p"); p.className = "emsg"; p.textContent = msg; q.appendChild(p);
+  }
+}
+function validate(stepId){
+  const sec = form.querySelector(`section[data-step="${stepId}"]`);
+  sec.querySelectorAll(".q.err").forEach(q => q.classList.remove("err"));
+  sec.querySelectorAll(".emsg").forEach(m => m.remove());
+  let first = null;
+  sec.querySelectorAll(".q[data-k]").forEach(q => {
+    if (!visible(q)) return;
+    const k = q.dataset.k, v = state[k];
+    let msg = null;
+    if (q.hasAttribute("data-req") && isEmpty(v)) msg = "Esta pregunta es obligatoria.";
+    else if (!isEmpty(v) && q.dataset.pattern && !(new RegExp(q.dataset.pattern)).test(v)) msg = q.dataset.msg;
+    else if (!isEmpty(v) && q.dataset.min){
+      const n = Number(v);
+      if (!Number.isInteger(n) || n < +q.dataset.min || n > +q.dataset.max) msg = q.dataset.msg;
+    }
+    if (msg){ setErr(q, msg); first = first || q; }
+  });
+  if (stepId === "clinico" && state.sintomas === "Sí"){
+    const algun = SINTOMAS.some((_, i) => state["s"+i] === "Sí") || !isEmpty(state.otro_sint);
+    if (!algun && !first){
+      const card = sec.querySelector("#tSint").closest(".card");
+      setErr(card, "Indicó que presentó síntomas: marque «Sí» en al menos uno o escriba otro síntoma."); card.classList.add("q"); first = card;
+    }
+  }
+  if (first){
+    first.scrollIntoView({behavior:"smooth", block:"center"});
+    document.getElementById("status").textContent = "Revise las preguntas marcadas en rojo.";
+    return false;
+  }
+  document.getElementById("status").textContent = "";
+  return true;
+}
+
+/* ---------- navegación ---------- */
+function show(id){
+  current = id;
+  form.querySelectorAll("section[data-step]").forEach(s => s.classList.toggle("on", s.dataset.step === id));
+  const p = path(), i = p.indexOf(id);
+  const last = i === p.length - 1;
+  document.getElementById("back").style.visibility = hist.length ? "visible" : "hidden";
+  const nx = document.getElementById("next");
+  nx.textContent = last ? "Enviar" : "Siguiente";
+  document.getElementById("bar").style.width = (id === "fin" ? 100 : Math.round(i / p.length * 100)) + "%";
+  window.scrollTo({top:0});
+  saveDraft();
+}
+document.getElementById("next").onclick = () => {
+  if (!validate(current)) return;
+  const p = path(), i = p.indexOf(current);
+  if (i === p.length - 1) return send();
+  hist.push(current); show(p[i + 1]);
+};
+document.getElementById("back").onclick = () => {
+  if (!hist.length) return;
+  document.getElementById("status").textContent = "";
+  show(hist.pop());
+};
+
+/* ---------- columnas para la hoja ---------- */
+function columns(){
+  const P = new Set(path());
+  const active = k => {
+    const el = form.querySelector(`[name="${CSS.escape(k)}"]`);
+    if (!el) return false;
+    const sec = el.closest("section[data-step]");
+    return P.has(sec.dataset.step) && visible(el) && !el.disabled;
+  };
+  const g = k => {
+    if (!active(k)) return "";
+    const v = state[k];
+    return Array.isArray(v) ? v.join("; ") : (v ?? "");
+  };
+  const C = [], add = (h, v) => C.push([h, v]);
+  add("ID", RID);
+  add("Marca temporal (dispositivo)", new Date().toLocaleString("es-PE"));
+  add("Consumió en comedor 27-29/10", g("consumio"));
+  add("No consumo - Motivo", g("motivo"));
+  add("No consumo - Otro motivo", g("motivo_otro"));
+  add("Cupo - Nombre de quien lo usó", g("cupo_nombre"));
+  add("Cupo - Celular", g("cupo_celular"));
+  add("Cupo - Carrera/ciclo/referencia", g("cupo_ref"));
+  add("Cupo - Días que lo usó", g("cupo_dias"));
+  add("Relación con los alimentos", g("relacion"));
+  add("Relación - Otro", g("relacion_otro"));
+  add("Condición", g("condicion"));
+  add("Condición - Otro", g("condicion_otro"));
+  add("Apellidos", g("apellidos"));
+  add("Nombres", g("nombres"));
+  add("DNI o código", g("dni"));
+  add("Sexo", g("sexo"));
+  add("Edad", g("edad"));
+  add("Domicilio", g("domicilio"));
+  add("Celular", g("celular"));
+  add("Escuela profesional", g("carrera"));
+  add("Ciclo", g("ciclo"));
+  add("Cargo u ocupación", g("cargo"));
+  add("Presentó síntomas", g("sintomas"));
+  add("Fecha inicio síntomas", g("fecha_inicio"));
+  add("Hora inicio síntomas", g("hora_inicio"));
+  SINTOMAS.forEach((s, i) => { add(`Síntoma - ${s}`, g("s"+i)); add(`Síntoma - ${s} - Fecha inicio`, g("sf"+i)); });
+  add("Otro síntoma", g("otro_sint"));
+  add("Otro síntoma - Fecha inicio", g("otro_sint_fecha"));
+  add("Atención de salud", g("atencion"));
+  add("Lugar de atención", g("lugar"));
+  add("Lugar de atención - Otro", g("lugar_otro"));
+  add("Hospitalizado", g("hospitalizado"));
+  add("Medicamentos", g("medicamentos"));
+  MENU.forEach(d => d.comidas.forEach(c => {
+    const mk = `m_${d.id}_${c.id}`, pre = `${d.corto} ${c.label}`, comio = g(mk);
+    add(`${pre} - Consumió`, comio);
+    add(`${pre} - Hora aprox.`, g(mk + "_hora"));
+    c.items.forEach((it, ii) => add(`${pre} - ${it}`, comio === "No" ? "No" : g(`${mk}_${ii}`)));
+  }));
+  add("Sabor u olor extraño", g("sabor"));
+  add("Sabor/olor - Alimentos", g("sabor_alim"));
+  add("Sabor/olor - Descripción", g("sabor_desc"));
+  return C;
+}
+
+/* ---------- envío ---------- */
+let sending = false;
+async function send(){
+  if (sending) return;
+  const C = columns();
+  const payload = {headers: C.map(c => c[0]), values: C.map(c => c[1])};
+  const nx = document.getElementById("next"), st = document.getElementById("status");
+
+  if (!SCRIPT_URL){
+    const rows = C.filter(c => c[1] !== "").map(c => `<tr><td><b>${esc(c[0])}</b></td><td>${esc(c[1])}</td></tr>`).join("");
+    document.getElementById("finMsg").textContent = "Modo de prueba: no se envió nada. Esta es la fila que llegaría a la hoja (solo columnas con dato):";
+    document.getElementById("finPreview").innerHTML = `<div class="preview"><table>${rows}</table></div>`;
+    return finish();
+  }
+
+  sending = true; nx.disabled = true; st.textContent = "Enviando…";
+  const body = JSON.stringify(payload);
+  try {
+    const r = await fetch(SCRIPT_URL, {method:"POST", body});
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "Error del servidor");
+    finish();
+  } catch (e1) {
+    try {
+      await fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body});
+      finish();
+    } catch (e2) {
+      st.textContent = "No se pudo enviar. Revise su conexión a internet y presione «Enviar» otra vez. Sus respuestas siguen guardadas en este dispositivo.";
+    }
+  } finally {
+    sending = false; nx.disabled = false;
+  }
+}
+function finish(){
+  try { localStorage.removeItem(DRAFT); } catch(e){}
+  document.getElementById("status").textContent = "";
+  document.getElementById("nav").hidden = true;
+  document.getElementById("draftNote").hidden = true;
+  form.querySelectorAll("section[data-step]").forEach(s => s.classList.toggle("on", s.dataset.step === "fin"));
+  document.getElementById("bar").style.width = "100%";
+  window.scrollTo({top:0});
+}
+
+/* ---------- inicio ---------- */
+if (!SCRIPT_URL) document.getElementById("demo").hidden = false;
+loadDraft(); fill(); refresh(); show(current);
+</script>
+</body>
+</html>
