@@ -236,14 +236,18 @@ button:disabled{opacity:.55;cursor:default}
   </div>
   <div data-if="eq:atencion:Sí">
     <div class="card q" data-k="lugar" data-req>
-      <p class="ql">¿Dónde? <span class="req">*</span></p>
-      <p class="hint">Puede marcar más de una opción.</p>
-      <div class="opt" data-check="lugar" data-opts="P.S. Higos Urco|Hospital Virgen de Fátima|Tópico de la universidad|Otro"></div>
-      <div class="q sub" data-k="lugar_otro" data-req data-if="has:lugar:Otro"><input type="text" name="lugar_otro" placeholder="Especifique el lugar"></div>
+      <p class="ql">¿Dónde recibió atención? <span class="req">*</span></p>
+      <div class="opt" data-radio="lugar" data-opts="P.S. Higos Urco|Hospital Virgen de Fátima|Tópico de la universidad|Otro"></div>
+      <div class="q sub" data-k="lugar_otro" data-req data-if="eq:lugar:Otro"><input type="text" name="lugar_otro" placeholder="Especifique el lugar"></div>
     </div>
     <div class="card q" data-k="hospitalizado" data-req>
       <p class="ql">¿Fue hospitalizado? <span class="req">*</span></p>
       <div class="opt" data-radio="hospitalizado" data-opts="Sí|No"></div>
+      <div class="q sub" data-k="hosp_lugar" data-req data-if="eq:hospitalizado:Sí">
+        <p class="ql">¿Dónde fue hospitalizado? <span class="req">*</span></p>
+        <div class="opt" data-radio="hosp_lugar" data-opts="Hospital Virgen de Fátima|P.S. Higos Urco|Otro"></div>
+        <div class="q sub" data-k="hosp_lugar_otro" data-req data-if="eq:hosp_lugar:Otro"><input type="text" name="hosp_lugar_otro" placeholder="Especifique el lugar"></div>
+      </div>
     </div>
     <div class="card q" data-k="medicamentos">
       <p class="ql">¿Recibió medicamentos?</p>
@@ -575,6 +579,8 @@ function columns(){
   add("Lugar de atención", g("lugar"));
   add("Lugar de atención - Otro", g("lugar_otro"));
   add("Hospitalizado", g("hospitalizado"));
+  add("Lugar de hospitalización", g("hosp_lugar"));
+  add("Lugar de hospitalización - Otro", g("hosp_lugar_otro"));
   add("Medicamentos", g("medicamentos"));
   MENU.forEach(d => d.comidas.forEach(c => {
     const mk = `m_${d.id}_${c.id}`, pre = `${d.corto} ${c.label}`, comio = g(mk);
